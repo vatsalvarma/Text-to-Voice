@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, Phone, Volume2, Loader2, PhoneOff } from 'lucide-react';
 import './App.css';
+import Login from './components/Login';
 
 interface Message {
   role: 'user' | 'kate' | 'system';
@@ -11,6 +12,7 @@ interface Message {
 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCallActive, setIsCallActive] = useState(false);
   const isCallActiveRef = useRef(false);
   const [status, setStatus] = useState<'idle' | 'listening' | 'processing' | 'speaking' | 'transferred'>('idle');
@@ -268,6 +270,10 @@ function App() {
     if (!isCallActive) return "Call Ended";
     return "Waiting for you to speak (Tap the orb to force listen)";
   };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="app-container">
